@@ -6,6 +6,6 @@ Depois rodem os comandos:
 
 ```bash
     python -m venv venv
-    ou venv\Scripts\activate no Windows
+    venv\Scripts\activate
     python3 -m pip install -U pygame==2.6.0
 ```
