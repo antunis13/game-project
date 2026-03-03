@@ -2,11 +2,14 @@ import pygame
 from peg import Peg
 from ball import Ball
 from cannon import Cannon
+import math
 
 
 class Game:
     def __init__(self):
         pygame.init()
+
+        self.score = 0
 
         # Tela
         self.SCREEN_WIDTH = 800
@@ -76,6 +79,10 @@ class Game:
 
         self.ball.update()
 
+        if self.ball.active:
+            self.check_collisions()
+            self.check_bounds()
+
 
     # -----------------------------
     # Desenho
@@ -91,6 +98,11 @@ class Game:
         self.cannon.draw(self.screen)
         # Desenhar bola
         self.ball.draw(self.screen)
+
+        font = pygame.font.SysFont(None, 36)
+
+        score_text = font.render(f"Score: {self.score}", True, (255, 255, 255))
+        self.screen.blit(score_text, (self.cannon.x + 80, self.cannon.y - 20))
 
         pygame.display.flip()
 
@@ -118,7 +130,71 @@ class Game:
             self.draw()
 
         pygame.quit()
+    
+    def check_collisions(self):
+        for peg in self.pegs:
+            if not peg.active:
+                continue
 
+            dx = self.ball.x - peg.x
+            dy = self.ball.y - peg.y
+            dist = math.sqrt(dx * dx + dy * dy)
+
+            if dist < self.ball.radius + peg.radius:
+
+                if dist == 0:
+                    dist = 0.01
+
+                # Normal da colisão
+                nx = dx / dist
+                ny = dy / dist
+
+                # Produto escalar
+                dot = self.ball.vel_x * nx + self.ball.vel_y * ny
+
+                gained = peg.hit()
+                self.score += gained    # soma no total
+
+                # Reflexão
+                self.ball.vel_x -= 2 * dot * nx
+                self.ball.vel_y -= 2 * dot * ny
+
+                # Pequeno empurrão para fora do peg
+                overlap = (self.ball.radius + peg.radius) - dist
+                self.ball.x += nx * overlap
+                self.ball.y += ny * overlap
+
+                peg.hit()
+
+    def check_bounds(self):
+
+        # parede esquerda
+        if self.ball.x - self.ball.radius <= 0:
+            self.ball.x = self.ball.radius
+            self.ball.vel_x *= -1
+
+        # parede direita
+        if self.ball.x + self.ball.radius >= self.SCREEN_WIDTH:
+            self.ball.x = self.SCREEN_WIDTH - self.ball.radius
+            self.ball.vel_x *= -1
+
+        # teto
+        if self.ball.y - self.ball.radius <= 0:
+            self.ball.y = self.ball.radius
+            self.ball.vel_y *= -1
+
+        # saiu por baixo
+        if self.ball.y - self.ball.radius > self.SCREEN_HEIGHT:
+            self.reset_ball()
+
+    def reset_ball(self):
+        tip_x, tip_y = self.cannon.get_tip_position()
+
+        self.ball.x = self.cannon.x
+        self.ball.y = self.cannon.y
+        self.ball.vel_x = 0
+        self.ball.vel_y = 0
+        self.ball.active = False    
 
 if __name__ == "__main__":
     game = Game()

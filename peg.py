@@ -14,6 +14,13 @@ class Peg:
         if self.bonus:
             self.points *= 2
 
+    def hit(self):
+        if not self.active:
+            return 0
+
+        self.active = False
+        return self.points
+
     def draw(self, surface):
         if not self.active:
             return

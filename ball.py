@@ -1,4 +1,5 @@
 import pygame
+import math
 
 
 class Ball:
@@ -14,12 +15,11 @@ class Ball:
         self.active = False  # só começa a cair quando lançada
 
     def launch(self, angle_deg, power):
-        import math
 
         angle = math.radians(angle_deg)
 
         self.vel_x = power * math.cos(angle)
-        self.vel_y = -power * math.sin(angle)
+        self.vel_y = power * math.sin(angle)
 
         self.active = True
 
