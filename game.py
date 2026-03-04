@@ -41,12 +41,12 @@ class Game:
         # Bola (começa parada no topo da área)
         self.ball = Ball(
             self.SCREEN_WIDTH // 2,
-            self.offset_y + 40
+            self.offset_y - 40
         )
 
         self.cannon = Cannon(
         self.SCREEN_WIDTH // 2,
-        self.offset_y + 40
+        self.offset_y - 40
 )
 
 
@@ -163,8 +163,6 @@ class Game:
                 overlap = (self.ball.radius + peg.radius) - dist
                 self.ball.x += nx * overlap
                 self.ball.y += ny * overlap
-
-                peg.hit()
 
     def check_bounds(self):
 
