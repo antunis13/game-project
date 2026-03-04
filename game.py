@@ -128,7 +128,7 @@ class Game:
                         tip_x, tip_y = self.cannon.get_tip_position()
                         self.ball.x = tip_x
                         self.ball.y = tip_y
-                        self.ball.launch(self.cannon.angle, 10)
+                        self.ball.launch(self.cannon.angle, 7)
 
             self.update()
             self.draw()
@@ -199,6 +199,10 @@ class Game:
         self.ball.active = False  
 
         self.chances -= 1
+
+        if self.chances <= 0:
+            self.chances = 0
+            self.running = False
 
 if __name__ == "__main__":
     game = Game()
