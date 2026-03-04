@@ -90,33 +90,29 @@ class Game:
     # Desenho
     # -----------------------------
     def draw(self):
-        self.screen.fill((0, 0, 0))
-
-        # Desenhar pegs
-        for peg in self.pegs:
-            peg.draw(self.screen)
-
-
-        self.cannon.draw(self.screen)
-        # Desenhar bola
-        self.ball.draw(self.screen)
-
-        font = pygame.font.SysFont(None, 36)
-
-        score_text = font.render(f"Score: {self.score}", True, (255, 255, 255))
-        self.screen.blit(score_text, (self.cannon.x + 80, self.cannon.y + 10))
-
-        chances_text = font.render(f"Balls: {self.chances}", True, (255, 255, 255))
-        self.screen.blit(chances_text, (self.cannon.x + 80, self.cannon.y + 40))
-
         if self.game_over:
-            font_big = pygame.font.SysFont(None, 72)
-            text = font_big.render("GAME OVER", True, (255, 50, 50))
-            self.screen.blit(text,(self.SCREEN_WIDTH // 2 - 150, self.SCREEN_HEIGHT // 2))
+            
+            self.screen.fill((0, 0, 0))
+
+        font_big = pygame.font.SysFont(None, 80)
+        font_small = pygame.font.SysFont(None, 40)
+        
+        game_over_text = font_big.render("GAME OVER", True, (255,50,50))
+        score_text = font_small.render(f"Final Score: {self.score}", True, (255,255,255))
+
+        self.screen.blit(
+        game_over_text,
+        (self.SCREEN_WIDTH//2 - 170, self.SCREEN_HEIGHT//2 - 50)
+        )
+
+        self.screen.blit(
+        game_over_text,
+        (self.SCREEN_WIDTH//2 - 170, self.SCREEN_HEIGHT//2 - 50)
+    )
 
         pygame.display.flip()
-
-
+        return
+        
     # -----------------------------
     # Loop principal
     # -----------------------------
