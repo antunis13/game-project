@@ -11,6 +11,7 @@ class Game:
 
         self.score = 0
         self.chances = 10
+        self.game_over = False
 
         # Tela
         self.SCREEN_WIDTH = 800
@@ -108,6 +109,11 @@ class Game:
         chances_text = font.render(f"Balls: {self.chances}", True, (255, 255, 255))
         self.screen.blit(chances_text, (self.cannon.x + 80, self.cannon.y + 40))
 
+        if self.game_over:
+            font_big = pygame.font.SysFont(None, 72)
+            text = font_big.render("GAME OVER", True, (255, 50, 50))
+            self.screen.blit(text,(self.SCREEN_WIDTH // 2 - 150, self.SCREEN_HEIGHT // 2))
+
         pygame.display.flip()
 
 
@@ -123,7 +129,7 @@ class Game:
                     self.running = False
 
                 # Clique para lançar
-                if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.type == pygame.MOUSEBUTTONDOWN and not self.game_over:
                     if not self.ball.active:
                         tip_x, tip_y = self.cannon.get_tip_position()
                         self.ball.x = tip_x
@@ -201,8 +207,8 @@ class Game:
         self.chances -= 1
 
         if self.chances <= 0:
-            self.chances = 0
-            self.running = False
+            if self.chances <= 0:
+                self.game_over = True
 
 if __name__ == "__main__":
     game = Game()
