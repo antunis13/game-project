@@ -10,6 +10,7 @@ class Game:
         pygame.init()
 
         self.score = 0
+        self.chances = 10
 
         # Tela
         self.SCREEN_WIDTH = 800
@@ -102,7 +103,10 @@ class Game:
         font = pygame.font.SysFont(None, 36)
 
         score_text = font.render(f"Score: {self.score}", True, (255, 255, 255))
-        self.screen.blit(score_text, (self.cannon.x + 80, self.cannon.y - 20))
+        self.screen.blit(score_text, (self.cannon.x + 80, self.cannon.y + 10))
+
+        chances_text = font.render(f"Balls: {self.chances}", True, (255, 255, 255))
+        self.screen.blit(chances_text, (self.cannon.x + 80, self.cannon.y + 40))
 
         pygame.display.flip()
 
@@ -192,7 +196,9 @@ class Game:
         self.ball.y = self.cannon.y
         self.ball.vel_x = 0
         self.ball.vel_y = 0
-        self.ball.active = False    
+        self.ball.active = False  
+
+        self.chances -= 1
 
 if __name__ == "__main__":
     game = Game()
