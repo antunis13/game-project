@@ -10,7 +10,7 @@ class Game:
         pygame.init()
 
         self.score = 0
-        self.chances = 10
+        self.chances = 11
         self.game_over = False
 
         # Tela
@@ -37,20 +37,24 @@ class Game:
         self.PEG_RADIUS = 12
         self.spacing = 40
 
+        # Criar pegs
         self.pegs = []
         self.create_pegs()
 
+        # Criar canhão
+        self.cannon = Cannon(
+        self.SCREEN_WIDTH // 2,
+        self.offset_y - 40
+        )
+        
         # Bola (começa parada no topo da área)
         self.ball = Ball(
             self.SCREEN_WIDTH // 2,
             self.offset_y - 40
         )
 
-        self.cannon = Cannon(
-        self.SCREEN_WIDTH // 2,
-        self.offset_y - 40
-)
-
+         # Resetar bola
+        self.reset_ball()
 
     # -----------------------------
     # Criação dos pegs
@@ -81,10 +85,9 @@ class Game:
 
         self.ball.update()
 
-        if self.ball.active:
+        if self.ball.active:    
             self.check_collisions()
             self.check_bounds()
-
 
     # -----------------------------
     # Desenho
@@ -104,12 +107,24 @@ class Game:
             self.screen.blit(game_over_text,(self.SCREEN_WIDTH//2 -170, self.SCREEN_HEIGHT//2 -50))
             self.screen.blit(score_text,(self.SCREEN_WIDTH//2 -110, self.SCREEN_HEIGHT//2 +40))
 
+            button_rect = pygame.Rect(self.SCREEN_WIDTH//2 - 100, self.SCREEN_HEIGHT//2 + 80, 200, 50)
+
+             # BOTÃO RESTART
+            pygame.draw.rect(self.screen, (200,200,200), button_rect)
+
+            font_button = pygame.font.SysFont(None, 40)
+            button_text = font_button.render("Restart", True, (0,0,0))
+
+            self.screen.blit(button_text, (self.SCREEN_WIDTH//2 - 50, self.SCREEN_HEIGHT//2 + 95))
+
+            self.restart_button = button_rect
+            
+            
             pygame.display.flip()
             return
 
 
         # JOGO NORMAL
-
         self.screen.fill((0,0,0))
 
         for peg in self.pegs:
@@ -132,20 +147,33 @@ class Game:
     # Loop principal
     # -----------------------------
     def run(self):
+        
         while self.running:
             self.clock.tick(60)
 
-            for event in pygame.event.get():
+            for event in pygame.event.get():    
+
                 if event.type == pygame.QUIT:
                     self.running = False
 
-                # Clique para lançar
-                if event.type == pygame.MOUSEBUTTONDOWN and not self.game_over:
-                    if not self.ball.active:
-                        tip_x, tip_y = self.cannon.get_tip_position()
-                        self.ball.x = tip_x
-                        self.ball.y = tip_y
-                        self.ball.launch(self.cannon.angle, 7)
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                        
+                        mouse_pos = pygame.mouse.get_pos()
+                         
+                        # clique no botão restart
+                        if self.game_over:
+                            if hasattr(self, "restart_button") and self.restart_button.collidepoint(mouse_pos):
+                                self.restart_game()
+
+                        # Clique para lançar bola
+                        else:
+                            if not self.ball.active:
+                                tip_x, tip_y = self.cannon.get_tip_position()
+                        
+                                self.ball.x = tip_x
+                                self.ball.y = tip_y
+                        
+                                self.ball.launch(self.cannon.angle, 7)
 
             self.update()
             self.draw()
@@ -210,7 +238,8 @@ class Game:
         tip_x, tip_y = self.cannon.get_tip_position()
 
         self.ball.x = self.cannon.x
-        self.ball.y = self.cannon.y
+        self.ball.y = self.cannon.y + 2
+
         self.ball.vel_x = 0
         self.ball.vel_y = 0
         self.ball.active = False  
@@ -218,8 +247,18 @@ class Game:
         self.chances -= 1
 
         if self.chances <= 0:
-            if self.chances <= 0:
-                self.game_over = True
+            self.game_over = True
+
+    def restart_game(self):
+
+        self.score = 0
+        self.chances = 10
+        self.game_over = False
+
+        self.pegs = []
+        self.create_pegs()
+
+        self.reset_ball()
 
 if __name__ == "__main__":
     game = Game()
