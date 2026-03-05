@@ -37,20 +37,24 @@ class Game:
         self.PEG_RADIUS = 12
         self.spacing = 40
 
+        # Criar pegs
         self.pegs = []
         self.create_pegs()
 
+        # Criar canhão
+        self.cannon = Cannon(
+        self.SCREEN_WIDTH // 2,
+        self.offset_y - 40
+        )
+        
         # Bola (começa parada no topo da área)
         self.ball = Ball(
             self.SCREEN_WIDTH // 2,
             self.offset_y - 40
         )
 
-        self.cannon = Cannon(
-        self.SCREEN_WIDTH // 2,
-        self.offset_y - 40
-)
-
+         # Resetar bola
+        self.reset_ball()
 
     # -----------------------------
     # Criação dos pegs
@@ -122,7 +126,6 @@ class Game:
 
 
         # JOGO NORMAL
-
         self.screen.fill((0,0,0))
 
         for peg in self.pegs:
@@ -148,12 +151,22 @@ class Game:
         while self.running:
             self.clock.tick(60)
 
-            for event in pygame.event.get():
+            for event in pygame.event.get():    
+
                 if event.type == pygame.QUIT:
                     self.running = False
 
+                 
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    
+                        if self.game_over:
+                            mouse_pos = pygame.mouse.get_pos()
+
+                            if self.restart_button.collidepoint(mouse_pos):
+                                self.restart_game()
+
                 # Clique para lançar
-                if event.type == pygame.MOUSEBUTTONDOWN and not self.game_over:
+                elif not self.game_over:
                     if not self.ball.active:
                         tip_x, tip_y = self.cannon.get_tip_position()
                         self.ball.x = tip_x
