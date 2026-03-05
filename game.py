@@ -244,8 +244,18 @@ class Game:
         self.chances -= 1
 
         if self.chances <= 0:
-            if self.chances <= 0:
-                self.game_over = True
+            self.game_over = True
+
+    def restart_game(self):
+
+        self.score = 0
+        self.chances = 10
+        self.game_over = False
+
+        self.pegs = []
+        self.create_pegs()
+
+        self.reset_ball()
 
 if __name__ == "__main__":
     game = Game()
