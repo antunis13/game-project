@@ -2,6 +2,7 @@ import pygame
 from peg import Peg
 from ball import Ball
 from cannon import Cannon
+from balde import Balde
 import math
 
 
@@ -54,6 +55,12 @@ class Game:
             self.offset_y - 40
         )
 
+        # Criar balde
+        self.balde = Balde(
+        self.SCREEN_WIDTH // 2 - 60,
+        self.SCREEN_HEIGHT - 30
+        )
+
         self.reset_ball()
 
     # -----------------------------
@@ -86,6 +93,9 @@ class Game:
         self.cannon.update(mouse_pos)
 
         self.ball.update()
+
+        # atualizar movimento do balde
+        self.balde.update(self.SCREEN_WIDTH)
 
         if self.ball.active:
             self.check_collisions()
@@ -196,6 +206,7 @@ class Game:
         for peg in self.pegs:
             peg.draw(self.screen)
 
+        self.balde.draw(self.screen)
         self.cannon.draw(self.screen)
         self.ball.draw(self.screen)
 
