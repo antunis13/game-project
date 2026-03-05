@@ -104,6 +104,19 @@ class Game:
             self.screen.blit(game_over_text,(self.SCREEN_WIDTH//2 -170, self.SCREEN_HEIGHT//2 -50))
             self.screen.blit(score_text,(self.SCREEN_WIDTH//2 -110, self.SCREEN_HEIGHT//2 +40))
 
+            button_rect = pygame.Rect(self.SCREEN_WIDTH//2 - 100, self.SCREEN_HEIGHT//2 + 80, 200, 50)
+
+             # BOTÃO RESTART
+            pygame.draw.rect(self.screen, (200,200,200), button_rect)
+
+            font_button = pygame.font.SysFont(None, 40)
+            button_text = font_button.render("Restart", True, (0,0,0))
+
+            self.screen.blit(button_text, (self.SCREEN_WIDTH//2 - 50, self.SCREEN_HEIGHT//2 + 95))
+
+            self.restart_button = button_rect
+            
+            
             pygame.display.flip()
             return
 
