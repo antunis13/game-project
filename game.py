@@ -11,6 +11,7 @@ class Game:
 
         self.score = 0
         self.chances = 10
+        self.game_over = False
 
         # Tela
         self.SCREEN_WIDTH = 800
@@ -89,27 +90,43 @@ class Game:
     # Desenho
     # -----------------------------
     def draw(self):
-        self.screen.fill((0, 0, 0))
 
-        # Desenhar pegs
+        if self.game_over:
+
+            self.screen.fill((0, 0, 0))
+
+            font_big = pygame.font.SysFont(None, 80)
+            font_small = pygame.font.SysFont(None, 40)
+
+            game_over_text = font_big.render("GAME OVER", True, (255,50,50))
+            score_text = font_small.render(f"Final Score: {self.score}", True, (255,255,255))
+
+            self.screen.blit(game_over_text,(self.SCREEN_WIDTH//2 -170, self.SCREEN_HEIGHT//2 -50))
+            self.screen.blit(score_text,(self.SCREEN_WIDTH//2 -110, self.SCREEN_HEIGHT//2 +40))
+
+            pygame.display.flip()
+            return
+
+
+        # JOGO NORMAL
+
+        self.screen.fill((0,0,0))
+
         for peg in self.pegs:
             peg.draw(self.screen)
 
-
         self.cannon.draw(self.screen)
-        # Desenhar bola
         self.ball.draw(self.screen)
 
         font = pygame.font.SysFont(None, 36)
 
-        score_text = font.render(f"Score: {self.score}", True, (255, 255, 255))
-        self.screen.blit(score_text, (self.cannon.x + 80, self.cannon.y + 10))
+        score_text = font.render(f"Score: {self.score}", True, (255,255,255))
+        self.screen.blit(score_text,(self.cannon.x + 80, self.cannon.y + 10))
 
-        chances_text = font.render(f"Balls: {self.chances}", True, (255, 255, 255))
-        self.screen.blit(chances_text, (self.cannon.x + 80, self.cannon.y + 40))
+        chances_text = font.render(f"Balls: {self.chances}", True, (255,255,255))
+        self.screen.blit(chances_text,(self.cannon.x + 80, self.cannon.y + 40))
 
         pygame.display.flip()
-
 
     # -----------------------------
     # Loop principal
@@ -123,7 +140,7 @@ class Game:
                     self.running = False
 
                 # Clique para lançar
-                if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.type == pygame.MOUSEBUTTONDOWN and not self.game_over:
                     if not self.ball.active:
                         tip_x, tip_y = self.cannon.get_tip_position()
                         self.ball.x = tip_x
@@ -201,8 +218,8 @@ class Game:
         self.chances -= 1
 
         if self.chances <= 0:
-            self.chances = 0
-            self.running = False
+            if self.chances <= 0:
+                self.game_over = True
 
 if __name__ == "__main__":
     game = Game()
