@@ -85,10 +85,9 @@ class Game:
 
         self.ball.update()
 
-        if self.ball.active:
+        if self.ball.active:    
             self.check_collisions()
             self.check_bounds()
-
 
     # -----------------------------
     # Desenho
@@ -156,13 +155,12 @@ class Game:
                 if event.type == pygame.QUIT:
                     self.running = False
 
-                 
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    
+                        
+                        mouse_pos = pygame.mouse.get_pos()
+                         # clique no botão restart
                         if self.game_over:
-                            mouse_pos = pygame.mouse.get_pos()
-
-                            if self.restart_button.collidepoint(mouse_pos):
+                            if hasattr(self, "restart_button") and self.restart_button.collidepoint(mouse_pos):
                                 self.restart_game()
 
                 # Clique para lançar
@@ -236,7 +234,8 @@ class Game:
         tip_x, tip_y = self.cannon.get_tip_position()
 
         self.ball.x = self.cannon.x
-        self.ball.y = self.cannon.y
+        self.ball.y = self.cannon.y + 2
+
         self.ball.vel_x = 0
         self.ball.vel_y = 0
         self.ball.active = False  
