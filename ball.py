@@ -24,6 +24,7 @@ class Ball:
         self.active = True
 
     def update(self):
+        
         if not self.active:
             return
 

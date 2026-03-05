@@ -10,7 +10,7 @@ class Game:
         pygame.init()
 
         self.score = 0
-        self.chances = 10
+        self.chances = 11
         self.game_over = False
 
         # Tela
@@ -147,6 +147,7 @@ class Game:
     # Loop principal
     # -----------------------------
     def run(self):
+        
         while self.running:
             self.clock.tick(60)
 
@@ -158,18 +159,21 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                         
                         mouse_pos = pygame.mouse.get_pos()
-                         # clique no botão restart
+                         
+                        # clique no botão restart
                         if self.game_over:
                             if hasattr(self, "restart_button") and self.restart_button.collidepoint(mouse_pos):
                                 self.restart_game()
 
-                # Clique para lançar
-                elif not self.game_over:
-                    if not self.ball.active:
-                        tip_x, tip_y = self.cannon.get_tip_position()
-                        self.ball.x = tip_x
-                        self.ball.y = tip_y
-                        self.ball.launch(self.cannon.angle, 7)
+                        # Clique para lançar bola
+                        else:
+                            if not self.ball.active:
+                                tip_x, tip_y = self.cannon.get_tip_position()
+                        
+                                self.ball.x = tip_x
+                                self.ball.y = tip_y
+                        
+                                self.ball.launch(self.cannon.angle, 7)
 
             self.update()
             self.draw()
