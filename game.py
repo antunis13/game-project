@@ -9,8 +9,9 @@ class Game:
     def __init__(self):
         pygame.init()
 
+        self.START_BALLS = 15
         self.score = 0
-        self.chances = 11
+        self.chances = self.START_BALLS
         self.game_over = False
         self.victory = False
 
@@ -32,7 +33,19 @@ class Game:
         self.offset_x = (self.SCREEN_WIDTH - self.GAME_WIDTH) // 2
         self.offset_y = (self.SCREEN_HEIGHT - self.GAME_HEIGHT) // 2
 
-        # Matriz
+        # Cria canhão
+        self.cannon = Cannon(
+            self.SCREEN_WIDTH // 2,
+            self.offset_y - 40
+        )
+
+         # Cria Bola
+        self.ball = Ball(
+            self.SCREEN_WIDTH // 2,
+            self.offset_y - 40
+        )
+
+        # Matriz de pegs
         self.ROWS = 12
         self.COLS = 12
         self.PEG_RADIUS = 12
@@ -42,19 +55,12 @@ class Game:
         self.pegs = []
         self.create_pegs()
 
-        # Criar canhão
-        self.cannon = Cannon(
-            self.SCREEN_WIDTH // 2,
-            self.offset_y - 40
-        )
-
-        # Bola
-        self.ball = Ball(
-            self.SCREEN_WIDTH // 2,
-            self.offset_y - 40
-        )
-
-        self.reset_ball()
+        # reset da posição da bola sem gastar tentativa
+        self.ball.x = self.cannon.x
+        self.ball.y = self.cannon.y + 2
+        self.ball.vel_x = 0
+        self.ball.vel_y = 0
+        self.ball.active = False
 
     # -----------------------------
     # Criar matriz de pegs
@@ -151,7 +157,7 @@ class Game:
             font_small = pygame.font.SysFont(None, 40)
 
             victory_text = font_big.render(
-                "YOU WON!", True, (255, 215, 0)
+                "  YOU WIN!", True, (255, 215, 0)
             )
 
             score_text = font_small.render(
@@ -350,14 +356,18 @@ class Game:
     def restart_game(self):
 
         self.score = 0
-        self.chances = 10
+        self.chances = self.START_BALLS
         self.game_over = False
         self.victory = False
 
         self.pegs = []
         self.create_pegs()
 
-        self.reset_ball()
+        self.ball.x = self.cannon.x
+        self.ball.y = self.cannon.y + 2
+        self.ball.vel_x = 0
+        self.ball.vel_y = 0
+        self.ball.active = False
 
 
 if __name__ == "__main__":
