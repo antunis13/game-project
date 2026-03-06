@@ -157,7 +157,7 @@ class Game:
             font_small = pygame.font.SysFont(None, 40)
 
             victory_text = font_big.render(
-                "  YOU WIN!", True, (255, 215, 0)
+                "  YOU WON!", True, (255, 215, 0)
             )
 
             score_text = font_small.render(
